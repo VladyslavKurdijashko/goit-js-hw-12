@@ -1,12 +1,20 @@
 import { searchImages } from './js/pixabay-api.js';
 import { renderGalleryItems, showLoader, hideLoader, showLoadMoreBtn, hideLoadMoreBtn } from './js/render-functions.js';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
 let currentPage = 1;
 let currentQuery = '';
+let totalHits = 0;
+const imagesPerPage = 15;
 
 const form = document.querySelector('.search-form');
 const input = document.querySelector('.search-input');
 const loadMoreBtn = document.querySelector('.load-more');
+
+const calculateTotalPages = (totalItems, itemsPerPage = 15) => {
+  return Math.ceil(totalItems / itemsPerPage);
+};
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -25,11 +33,22 @@ form.addEventListener('submit', async (event) => {
   showLoader();
 
   try {
-    const data = await searchImages(currentQuery, currentPage);
+    const data = await searchImages(currentQuery, currentPage, imagesPerPage);
+    totalHits = data.totalHits;
     renderGalleryItems(data.hits);
-    if (data.totalHits > 15) {
+
+    const totalPages = calculateTotalPages(totalHits, imagesPerPage);
+
+    if (totalPages > currentPage) {
       showLoadMoreBtn();
+    } else {
+      hideLoadMoreBtn();
+      iziToast.info({
+        title: 'Info',
+        message: "We're sorry, but you've reached the end of search results.",
+      });
     }
+
   } catch (error) {
     iziToast.error({
       title: 'Error',
@@ -45,22 +64,26 @@ loadMoreBtn.addEventListener('click', async () => {
   showLoader();
 
   try {
-    const data = await searchImages(currentQuery, currentPage);
-    renderGalleryItems(data.hits);
+    const data = await searchImages(currentQuery, currentPage, imagesPerPage);
+    renderGalleryItems(data.hits, true);
 
-    const { height: cardHeight } = document.querySelector('.gallery').firstElementChild.getBoundingClientRect();
+    // Прокрутка сторінки
+    const cardHeight = document.querySelector('.gallery').firstElementChild.getBoundingClientRect().height;
     window.scrollBy({
       top: cardHeight * 2,
       behavior: 'smooth',
     });
 
-    if (currentPage * 15 >= data.totalHits) {
+    const totalPages = calculateTotalPages(totalHits, imagesPerPage);
+
+    if (currentPage >= totalPages || data.hits.length < imagesPerPage) {
       hideLoadMoreBtn();
       iziToast.info({
         title: 'Info',
         message: "We're sorry, but you've reached the end of search results.",
       });
     }
+
   } catch (error) {
     iziToast.error({
       title: 'Error',

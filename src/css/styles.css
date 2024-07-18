@@ -48,7 +48,7 @@ button:hover {
   box-sizing: border-box;
 }
 
-.loader.hidden {
+.hidden {
   display: none;
 }
 

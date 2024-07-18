@@ -3,15 +3,15 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-export const renderGalleryItems = (images) => {
+export const renderGalleryItems = (images, append = false) => {
   const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = ''; // Clear previous results
 
-  if (images.length === 0) {
+  if (images.length === 0 && !append) {
     iziToast.error({
       title: 'Error',
       message: 'Sorry, there are no images matching your search query. Please try again!',
     });
+    gallery.innerHTML = ''; 
     return;
   }
 
@@ -27,7 +27,11 @@ export const renderGalleryItems = (images) => {
     </a>
   `).join('');
 
-  gallery.insertAdjacentHTML('beforeend', markup);
+  if (append) {
+    gallery.insertAdjacentHTML('beforeend', markup); 
+  } else {
+    gallery.innerHTML = markup; 
+  }
 
   new SimpleLightbox('.gallery a').refresh();
 };
@@ -41,9 +45,14 @@ export const hideLoader = () => {
 };
 
 export const showLoadMoreBtn = () => {
-  document.querySelector('.load-more').classList.remove('hidden');
+  const loadMoreBtn = document.querySelector('.load-more');
+  loadMoreBtn.classList.remove('hidden');
+  loadMoreBtn.style.display = 'flex';
+  loadMoreBtn.style.justifyContent = 'center';
+  loadMoreBtn.style.marginTop = '20px'; 
 };
 
 export const hideLoadMoreBtn = () => {
-  document.querySelector('.load-more').classList.add('hidden');
+  const loadMoreBtn = document.querySelector('.load-more');
+  loadMoreBtn.classList.add('hidden');
 };
