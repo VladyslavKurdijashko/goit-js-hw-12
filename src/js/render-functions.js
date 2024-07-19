@@ -5,13 +5,13 @@ import 'izitoast/dist/css/iziToast.min.css';
 
 export const renderGalleryItems = (images, append = false) => {
   const gallery = document.querySelector('.gallery');
+  if (!append) gallery.innerHTML = ''; 
 
-  if (images.length === 0 && !append) {
+  if (images.length === 0) {
     iziToast.error({
       title: 'Error',
       message: 'Sorry, there are no images matching your search query. Please try again!',
     });
-    gallery.innerHTML = ''; 
     return;
   }
 
@@ -27,11 +27,7 @@ export const renderGalleryItems = (images, append = false) => {
     </a>
   `).join('');
 
-  if (append) {
-    gallery.insertAdjacentHTML('beforeend', markup); 
-  } else {
-    gallery.innerHTML = markup; 
-  }
+  gallery.insertAdjacentHTML('beforeend', markup);
 
   new SimpleLightbox('.gallery a').refresh();
 };
@@ -55,4 +51,5 @@ export const showLoadMoreBtn = () => {
 export const hideLoadMoreBtn = () => {
   const loadMoreBtn = document.querySelector('.load-more');
   loadMoreBtn.classList.add('hidden');
+  loadMoreBtn.style.display = 'none'; 
 };

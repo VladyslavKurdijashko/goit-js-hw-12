@@ -39,7 +39,7 @@ form.addEventListener('submit', async (event) => {
 
     const totalPages = calculateTotalPages(totalHits, imagesPerPage);
 
-    if (totalPages > currentPage) {
+    if (totalPages > currentPage && data.hits.length === imagesPerPage) {
       showLoadMoreBtn();
     } else {
       hideLoadMoreBtn();
@@ -67,7 +67,7 @@ loadMoreBtn.addEventListener('click', async () => {
     const data = await searchImages(currentQuery, currentPage, imagesPerPage);
     renderGalleryItems(data.hits, true);
 
-    // Прокрутка сторінки
+   
     const cardHeight = document.querySelector('.gallery').firstElementChild.getBoundingClientRect().height;
     window.scrollBy({
       top: cardHeight * 2,
