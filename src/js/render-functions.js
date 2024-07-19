@@ -5,7 +5,7 @@ import 'izitoast/dist/css/iziToast.min.css';
 
 export const renderGalleryItems = (images, append = false) => {
   const gallery = document.querySelector('.gallery');
-  if (!append) gallery.innerHTML = ''; 
+  if (!append) gallery.innerHTML = '';
 
   if (images.length === 0) {
     iziToast.error({
@@ -45,11 +45,11 @@ export const showLoadMoreBtn = () => {
   loadMoreBtn.classList.remove('hidden');
   loadMoreBtn.style.display = 'flex';
   loadMoreBtn.style.justifyContent = 'center';
-  loadMoreBtn.style.marginTop = '20px'; 
+  loadMoreBtn.style.marginTop = '20px';
 };
 
 export const hideLoadMoreBtn = () => {
   const loadMoreBtn = document.querySelector('.load-more');
   loadMoreBtn.classList.add('hidden');
-  loadMoreBtn.style.display = 'none'; 
+  loadMoreBtn.style.display = 'none';
 };

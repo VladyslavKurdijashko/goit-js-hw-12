@@ -11,6 +11,7 @@ const imagesPerPage = 15;
 const form = document.querySelector('.search-form');
 const input = document.querySelector('.search-input');
 const loadMoreBtn = document.querySelector('.load-more');
+const scrollToTopBtn = document.getElementById('scroll-to-top');
 
 const calculateTotalPages = (totalItems, itemsPerPage = 15) => {
   return Math.ceil(totalItems / itemsPerPage);
@@ -67,7 +68,7 @@ loadMoreBtn.addEventListener('click', async () => {
     const data = await searchImages(currentQuery, currentPage, imagesPerPage);
     renderGalleryItems(data.hits, true);
 
-   
+    
     const cardHeight = document.querySelector('.gallery').firstElementChild.getBoundingClientRect().height;
     window.scrollBy({
       top: cardHeight * 2,
@@ -91,5 +92,23 @@ loadMoreBtn.addEventListener('click', async () => {
     });
   } finally {
     hideLoader();
+  }
+});
+
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+};
+
+scrollToTopBtn.addEventListener('click', scrollToTop);
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 200) {
+    scrollToTopBtn.classList.add('show');
+  } else {
+    scrollToTopBtn.classList.remove('show');
   }
 });
